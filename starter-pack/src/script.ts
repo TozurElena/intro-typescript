@@ -1,11 +1,13 @@
 (function() {
-    document.getElementById('guess-form').addEventListener("submit", compareUserGuess);
+    const form:any = document.getElementById('guess-form');
+    form.addEventListener("submit", compareUserGuess);
 
     function compareUserGuess (event) {
         event.preventDefault();
 
         const secretNumber: number = generateSecretNumber();
-        const userNumber: number = document.getElementById('guess').value;
+        const userGuess:any = document.getElementById('guess');
+        const userNumber: number = userGuess.value;
 
         if (secretNumber == userNumber) {
             alert("Awesome! You number " + userNumber + " was correct. You can be named many things, hungry not being one of them.");

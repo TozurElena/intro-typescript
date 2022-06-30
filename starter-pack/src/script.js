@@ -1,9 +1,11 @@
 (function () {
-    document.getElementById('guess-form').addEventListener("submit", compareUserGuess);
+    var form = document.getElementById('guess-form');
+    form.addEventListener("submit", compareUserGuess);
     function compareUserGuess(event) {
         event.preventDefault();
         var secretNumber = generateSecretNumber();
-        var userNumber = document.getElementById('guess').value;
+        var userGuess = document.getElementById('guess');
+        var userNumber = userGuess.value;
         if (secretNumber == userNumber) {
             alert("Awesome! You number " + userNumber + " was correct. You can be named many things, hungry not being one of them.");
         }
