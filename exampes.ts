@@ -66,19 +66,95 @@ const infoWithIndexType: IndexType = {
 }
 
 // implements
-interface Connection {
-  request(url: string): any;
+interface Connection<T> {
+  request(url: string): Promise<T>;
 }
-class FetchService implements Connection {
-  request(url: string): any {
+class FetchService<P> implements Connection<P> {
+  request(url: string): Promise<P> {
     return fetch(url).then((result) => result.json())
   }
 }
-const fetchPost = new FetchService();
+interface Post {
+  id: number;
+  usedId: number;
+  title: string;
+  body: string;
+}
+
+const fetchPost = new FetchService<Post>();
 fetchPost
   .request('https://jsonplaceholder.typicode.com/posts/1')
   .then((data) => {
     console.log('data: ', data);
   });
 
-  
+// Generics
+function echo<T>(data: T) {
+  return data;
+}
+const output = echo<string>('Avion');
+const myAge: number = 46;
+const outputAge = echo(myAge);
+
+function getLength<T extends { length: number }>(data: T) {
+  return data.length;
+}
+getLength('KOzyreva');
+getLength({length:32});
+// getLength(54); //error
+getLength([]); //ok, array with proper length
+
+interface Todo {
+  id: number;
+  title: string;
+  userId: number;
+  completed?: boolean;
+  body?: string;
+}
+// partial - faire chaque propres optionnels
+const todo1:  Partial<Todo> = {
+  title: 'Acheter auto',
+};
+// required - faire toutes propres obligatoires
+const todo2: Required<Todo> = {
+  id: 1,
+  title: 'Acheter block',
+  userId: 54,
+  completed: true,
+  body: '4x4',
+};
+const todo3: Readonly<Todo> = {
+  id: 1,
+  title: 'Acheter livre',
+  userId: 55,
+}
+
+const infoWithRecordUtilityType: Record<string, number> = {
+  age: 54,
+}
+// Pick - peux créeer nouvelle type sur base d'argument, prendre des proprietes, qui sont 2-ème argument
+const todo4: Pick<Todo, "id" | "title"> = {
+  id:2,
+  title: 'Acheter maison',
+};
+
+// Omit - peux créer nouvelle type sur base d'argument, sauf des proprietes, qui sont 2-ème argument
+const todo5: Omit<Todo, "id"> = {
+  title: 'Acheter maison',
+  userId: 54,
+};
+// copier le type de propriété d'une autre interface.
+interface NewTodo {
+  text: Todo["title"]; //name de propriété de quel on veut copier
+}
+
+// Typage de callback
+function myOwnForEach<T>(data: T[], callback: (item:T) => void) {
+  for(let i = 0; i < data.length; i++) {
+    callback(data[i]);
+  }
+}
+myOwnForEach([1, 2, 3, 4], (item) => {
+  console.log('item: ', item);
+
+})
